@@ -1,0 +1,38 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: longhorn-test
+spec:
+  storageClassName: "longhorn"
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 20Gi
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: longhorn-test
+spec:
+  template:
+    spec:
+      containers:
+      - name: longhorn-test
+        image: svallero/fio-plot:0.0
+        command: ["/bin/sh"]
+        args: ["-c","cd /fio-plot/benchmark_script; ./bench_fio --target /longhorn --type directory --template fio-job-template.fio  --iodepth 1 8 16 --numjobs 1 --mode randrw --output /outputs --rwmixread 75 90 --size 1G"]
+        volumeMounts:
+        - name: test-dir
+          mountPath: /longhorn
+        - name: outputs-dir
+          mountPath: /outputs
+      restartPolicy: Never
+      volumes:
+      - name: test-dir
+        persistentVolumeClaim:
+          claimName: longhorn-test
+      - name: outputs-dir
+        persistentVolumeClaim:
+          claimName: outputs-test
+  backoffLimit: 10
