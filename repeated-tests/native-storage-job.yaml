@@ -1,0 +1,27 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: native-storage-test
+spec:
+  template:
+    spec:
+      containers:
+      - name: native-storage-test
+        image: svallero/fio-plot:0.0
+        command: ["/bin/sh"]
+        args: ["-c","cd /fio-plot/benchmark_script; ./bench_fio --target /native-storage --type directory --template fio-job-template.fio --iodepth 1 --numjobs 1 --runtime 30 --mode randread randwrite --output /outputs --size 1G -b 4k"]
+        volumeMounts:
+        - name: test-dir
+          mountPath: /native-storage
+        - name: outputs-dir
+          mountPath: /outputs
+      restartPolicy: Never
+      volumes:
+      - name: test-dir
+        persistentVolumeClaim:
+          claimName: fio-tests
+      - name: outputs-dir
+        persistentVolumeClaim:
+          claimName: outputs-test
+  backoffLimit: 10
+

@@ -1,0 +1,47 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: longhorn-nfs-test
+spec:
+  storageClassName: "longhorn-nfs"
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 2Gi
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: longhorn-nfs-test
+spec:
+  template:
+    spec:
+      containers:
+      - name: longhorn-nfs-test
+        image: svallero/fio-plot:0.0
+        command: ["/bin/sh"]
+        args: ["-c","cd /fio-plot/benchmark_script; ./bench_fio --target /longhorn-nfs --type directory --template fio-job-template.fio --iodepth 1 --numjobs 1 --runtime 30 --mode randread randwrite --output /outputs --size 1G -b 4k"]
+        volumeMounts:
+        - name: test-dir
+          mountPath: /longhorn-nfs
+        - name: outputs-dir
+          mountPath: /outputs
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: kubernetes.io/hostname
+                operator: In
+                values:
+                - worker1
+      restartPolicy: Never
+      volumes:
+      - name: test-dir
+        persistentVolumeClaim:
+          claimName: longhorn-nfs-test
+      - name: outputs-dir
+        persistentVolumeClaim:
+          claimName: outputs-test
+  backoffLimit: 10
