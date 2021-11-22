@@ -42,7 +42,7 @@ We provide a python script,  `plot_results.py`, that you can use to plot the res
 
 You can then run a bash shell on the pod and execute the script as follows:
 
-`$ kubectl exec -it -n k8s-test-storage make-plots-0 -- bash`
+`$ kubectl exec -it -n k8s-test-storage make-plots-0 -- bash` 
 `$ cd fio-plot/fio_plot/plots`
 `$ python plot_results.py`
 
