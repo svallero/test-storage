@@ -42,8 +42,8 @@ We provide a python script,  `plot_results.py`, that you can use to plot the res
 
 You can then run a bash shell on the pod and execute the script as follows:
 
-`$ kubectl exec -it -n k8s-test-storage make-plots-0 -- bash` 
-`$ cd fio-plot/fio_plot/plots`
+`$ kubectl exec -it -n k8s-test-storage make-plots-0 -- bash` \
+`$ cd fio-plot/fio_plot/plots`\
 `$ python plot_results.py`
 
 The script reads the log files inside the subdirectories in `/fio-plot/fio_plot/plots/repeated-tests-output`. Each log file contains a table with one row every 500 ms. Each row contains the time in ns, the value of the variable (latency, bandwidth, iops, etc.) and integers representing the test modes. The script calculates the median and the 68% central confidence limits for each test, then stores it in a JSON file. One time series for each file system and for each mode is produced. By changing the variables inside the script, the user can reduce the sensitivity (one error bar every N data points) and to define a range of data to plot.
