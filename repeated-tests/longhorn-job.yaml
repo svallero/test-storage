@@ -35,7 +35,7 @@ spec:
               - key: kubernetes.io/hostname
                 operator: In
                 values:
-                - worker1
+                - k8s-worker-1
       restartPolicy: Never
       volumes:
       - name: test-dir
@@ -43,6 +43,6 @@ spec:
           claimName: longhorn-test
       - name: outputs-dir
         persistentVolumeClaim:
-          claimName: outputs-test
+          claimName: test-rwx
   backoffLimit: 10
 

@@ -42,7 +42,7 @@ spec:
       volumes:
       - name: outputs-dir
         persistentVolumeClaim:
-          claimName: outputs-test
+          claimName: test-rwx
   volumeClaimTemplates:
   - metadata:
       name: plots-dir

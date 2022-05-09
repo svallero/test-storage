@@ -9,7 +9,8 @@
 ###############################################################
 
 # General variables
-namespace="k8s-test-storage"
+namespace="default"
+basedir=`pwd`
 
 # Start iteration
 i=0
@@ -17,7 +18,8 @@ while [ $i -lt $1 ];
 do
 
     # Iterate over file systems
-    for fs in 'longhorn' 'longhorn-nfs' 'native-storage' # Iterate over file systems
+    #for fs in 'longhorn' 'longhorn-rwx' 'native-storage' # Iterate over file systems
+    for fs in 'longhorn' 'longhorn-rwx' # Iterate over file systems
     do	
 
 	# Take note of the UTC time
@@ -28,7 +30,7 @@ do
 	kubectl delete job $fs'-test' -n $namespace
 
 	# Run job from yaml file
-    	kubectl apply -f '/home/centos/alessio/storage-tests/'$fs'-job.yaml' -n $namespace
+    	kubectl apply -f $basedir'/'$fs'-job.yaml' -n $namespace
 
 	# Wait (sleep time must be larger than the duration of the test)
     	sleep $2

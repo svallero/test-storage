@@ -3,9 +3,10 @@ kind: PersistentVolumeClaim
 metadata:
   name: outputs-test
 spec:
-  storageClassName: "longhorn-nfs"
   accessModes:
-    - ReadWriteOnce
+    - ReadWriteMany
   resources:
     requests:
       storage: 1Gi
+  storageClassName: longhorn
+  volumeName: test-rwx
